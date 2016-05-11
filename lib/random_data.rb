@@ -23,4 +23,8 @@ module RandomData
     letters.shuffle!
     letters[1,rand(3..8)].join
   end
+
+  def self.random_price
+    price = rand(1000)
+  end
 end
