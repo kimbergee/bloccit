@@ -22,7 +22,7 @@ posts = Post.all
     topic: topics.sample,
     title: RandomData.random_sentence,
     body: RandomData.random_paragraph,
-    price: 90
+    price: rand(50...100)
   )
 end
 sponsored_posts = SponsoredPost.all
