@@ -37,7 +37,7 @@ posts = Post.all
 end
 
 #comments for topics
-100.times do
+25.times do
   Comment.create!(
     user: users.sample,
     topic: topics.sample,
