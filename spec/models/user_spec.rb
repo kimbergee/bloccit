@@ -3,9 +3,10 @@ require 'rails_helper'
 RSpec.describe User, type: :model do
   let(:user) { User.create!(name: "Bloccit User", email: "user@bloccit.com", password: "password") }
 
-  it {is_expected.to have_many(:posts) }
+  it { is_expected.to have_many(:posts) }
   it { is_expected.to have_many(:comments) }
   it { is_expected.to have_many(:votes) }
+  it { is_expected.to have_many(:favorites) }
 
   it { is_expected.to validate_presence_of(:name) }
   it { is_expected.to validate_length_of(:name).is_at_least(1) }
@@ -30,6 +31,10 @@ RSpec.describe User, type: :model do
 
     it "responds to admin?" do
       expect(user).to respond_to(:admin?)
+    end
+
+    it "responds to member?" do
+      expect(user).to respond_to(:member?)
     end
   end
 
@@ -63,10 +68,6 @@ RSpec.describe User, type: :model do
     end
   end
 
-  it "responds to member?" do
-    expect(user).to respond_to(:member?)
-  end
-
   describe "invalid user" do
     let(:user_with_invalid_name) { User.new(name: "", email: "user@bloccit.com") }
     let(:user_with_invalid_email) { User.new(name: "Bloccit User", email: "") }
@@ -78,6 +79,22 @@ RSpec.describe User, type: :model do
     it "should be an invalid user due to blank email" do
       expect(user_with_invalid_email).to_not be_valid
     end
-
   end
+
+  describe "#favorite_for(post)" do
+    before do
+      topic = Topic.create!(name: RandomData.random_sentence, description: RandomData.random_paragraph)
+      @post = topic.posts.create!(title: RandomData.random_sentence, body: RandomData.random_paragraph, user: user)
+    end
+
+    it "returns `nil` if the user has not favorited the post" do
+      expect(user.favorite_for(@post)).to be_nil
+    end
+
+    it "returns the appropriate favorite if it exists" do
+      favorite = user.favorites.where(post: @post).create
+      expect(user.favorite_for(@post)).to eq(favorite)
+    end
+  end
+    
 end
