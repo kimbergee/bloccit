@@ -5,3 +5,10 @@
   margin-bottom: 5px;
   margin-right: 5px;
 }
+
+.media-left.align {
+  min-width: 35px;
+  div {
+    text-align: center;
+  }
+}
