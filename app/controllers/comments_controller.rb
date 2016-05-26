@@ -25,10 +25,14 @@ class CommentsController < ApplicationController
     @post = Post.find(params[:post_id])
     @comment = @post.comments.find(params[:id])
 
-    if @comment.destroy
-      flash[:notice] = "Comment was deleted successfully."
+    if @comment.user_id == current_user.id || current_user.admin?
+      if @comment.destroy
+        flash[:notice] = "Comment was deleted successfully."
+      else
+        flash[:alert] = "Comment couldn't be deleted. Try again."
+      end
     else
-      flash[:alert] = "Comment couldn't be deleted. Try again."
+      flash[:alert] = "You do not have authorization to delete that comment"
     end
 
     respond_to do |format|
